@@ -11,10 +11,16 @@ public class Test {
 		System.out.println(dir);
 		File file = new File(dir);
 		List<File> list = new ArrayList<File>();
+		List<String> cl = new ArrayList<String>();
 		loop(file,list);
 		for(File ff : list) {
-			System.out.println(ff.getName());
+			String name = ff.getPath();
+			name = name.replace(dir+"\\", "");
+			name = name.replace(".java", "");
+			name = name.replaceAll("\\\\", ".");
+			cl.add(name);
 		}
+		
 	}
 	
 	public static void loop(File file, List<File> list) {
