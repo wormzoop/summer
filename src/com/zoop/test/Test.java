@@ -1,6 +1,7 @@
 package com.zoop.test;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +20,17 @@ public class Test {
 			name = name.replace(".java", "");
 			name = name.replaceAll("\\\\", ".");
 			cl.add(name);
+			try {
+				Class clazz = Class.forName(name);
+				Annotation[] annotation = clazz.getAnnotations();
+				System.out.println(name+"-----------");
+				for(Annotation an : annotation) {
+					System.out.println(an.toString());
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
-		
 	}
 	
 	public static void loop(File file, List<File> list) {
