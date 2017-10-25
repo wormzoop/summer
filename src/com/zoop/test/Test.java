@@ -66,7 +66,7 @@ public class Test {
 				for(Annotation an : field.getAnnotations()){
 					if(an.toString().equals("@com.zoop.annotation.Autowired()")){
 						field.setAccessible(true);
-						field.set(obj, new TestService());
+						field.set(obj, Class.forName("com.zoop.test.TestService").newInstance());
 					}
 				}
 			}
