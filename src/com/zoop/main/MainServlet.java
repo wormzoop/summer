@@ -1,6 +1,8 @@
 package com.zoop.main;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -9,20 +11,42 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson.JSON;
 import com.sun.xml.internal.ws.wsdl.writer.document.Service;
 import com.zoop.annotation.Autowired;
 import com.zoop.annotation.Controller;
 import com.zoop.annotation.RequestMapping;
 
 //处理web请求找到对应的controller
-public class MainServlet {
+public class MainServlet extends HttpServlet{
 
-	public MainServlet(){
-		init();
+	private static final long serialVersionUID = -6300271163121103199L;
+
+	//请求对应方法
+	Map<String, Object> reqMethod = new HashMap<String, Object>();
+	//请求对应对象
+	Map<String, Object> reqObj = new HashMap<String, Object>();
+	
+	public void service(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException{
+		String uri = request.getRequestURI();
+		try {
+			String json = JSON.toJSONString(((Method)reqMethod.get(uri)).invoke(reqObj.get(uri), null));
+			PrintWriter out = response.getWriter();
+			out.write(json);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//实例化注解的类
-	private void init(){
+	public void init(){
 		String dir = System.getProperty("user.dir")+"\\src";
 		System.out.println(dir);
 		File file = new File(dir);
@@ -35,10 +59,6 @@ public class MainServlet {
 		//存放有service注解的对象
 		List<Object> serviceList = new ArrayList<Object>();
 		Map<String, Object> objMap = new HashMap<String, Object>();
-		//请求对应方法
-		Map<String, Object> reqMethod = new HashMap<String, Object>();
-		//请求对应对象
-		Map<String, Object> reqObj = new HashMap<String, Object>();
 		for(File ff : list) {
 			String name = ff.getPath();
 			name = name.replace(dir+"\\", "");
