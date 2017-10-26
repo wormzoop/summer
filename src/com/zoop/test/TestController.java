@@ -1,5 +1,7 @@
 package com.zoop.test;
 
+import java.util.Map;
+
 import com.zoop.annotation.Autowired;
 import com.zoop.annotation.Controller;
 import com.zoop.annotation.RequestMapping;
@@ -11,12 +13,8 @@ public class TestController {
 	private TestService testService;
 	
 	@RequestMapping(value="/list")
-	public void exec(){
-		if(testService == null){
-			System.out.println("testService is null");
-		}else{
-			testService.exec();
-		}
+	public Map<String, Object> exec(){
+		return testService.exec();
 	}
 	
 }
