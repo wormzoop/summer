@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,7 @@ public class MainServlet extends HttpServlet{
 	//请求对应对象
 	Map<String, Object> reqObj = new HashMap<String, Object>();
 	
+	//接收请求返回值
 	public void service(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException{
 		String uri = request.getRequestURI();
@@ -45,9 +47,13 @@ public class MainServlet extends HttpServlet{
 		}
 	}
 	
-	//实例化注解的类
+	//只初始化一次将实例化的对象存入
 	public void init(){
-		String dir = System.getProperty("user.dir")+"\\src";
+		String pac = this.getServletConfig().getInitParameter("package");
+		if(pac != null && !pac.equals("")){
+			String[] pacs = pac.split(",");
+		}
+		String dir = this.getServletConfig().getServletContext().getRealPath("/")+"src";
 		System.out.println(dir);
 		File file = new File(dir);
 		System.out.println(file.listFiles());
@@ -114,6 +120,11 @@ public class MainServlet extends HttpServlet{
 				}
 			}
 		}
+	}
+	
+	public static void allFile(String pac, List<Class> list){
+		String pacDir = pac.replaceAll(".", "\\\\");
+		//根据包获得所有的类
 	}
 	
 	//循环获得java文件
